@@ -21,11 +21,12 @@ import java.util.List;
 public class Expandots extends View {
 
     List<Dot> mDots = new ArrayList<Dot>();
-    private int mDotsCount = 5;
+    private int mDotsCount = 4;
     private int mMaxScale = 100;
     private int mMinScale = 10;
-    private int mDuration = 600;
-    private int mWaitForAll = mDuration*(mDotsCount-1);
+    private int mDuration = 800;
+    private int mWaitingDuration = mDuration/4;
+    private int mWaitForAll = (mWaitingDuration)*(mDotsCount-2);
 
 
     public Expandots(Context context) {
@@ -44,25 +45,26 @@ public class Expandots extends View {
     }
 
     public void initialize() {
+        Log.d("ANIM", "initialize: " + mWaitForAll);
         mDots = new ArrayList<>();
 
         for(int i=0; i<mDotsCount; i++) {
-            final Dot dot = new Dot(mMaxScale*i+1, mMaxScale);
+            final Dot dot = new Dot(mMaxScale*(i+1), mMaxScale);
             mDots.add(dot);
             ValueAnimator animator = ValueAnimator.ofInt(mMinScale, mMaxScale, mMinScale);
             animator.setDuration(mDuration);
-            animator.setStartDelay(i*mDuration);
-//            animator.setRepeatCount(ValueAnimator.INFINITE);
+            animator.setStartDelay(i * mWaitingDuration);
+
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     int scale = (int)(valueAnimator.getAnimatedValue());
-                    Log.d("ANIM", "onAnimationUpdate: " + scale);
                     dot.currentWidth = scale;
                     dot.currentHeight = scale;
                     invalidate();
                 }
             });
+
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
@@ -71,7 +73,14 @@ public class Expandots extends View {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    animator.setStartDelay(mWaitForAll);
+                    Log.d("ANIM", "onAnimationEnd: " + dot.mPosX);
+                    if(mWaitForAll > 0) {
+                        animator.setStartDelay(mWaitForAll);
+                    }
+                    else {
+                        // bug?
+                        animator.setStartDelay(0);
+                    }
                     animator.start();
                 }
 
@@ -85,6 +94,7 @@ public class Expandots extends View {
 
                 }
             });
+
             animator.start();
         }
     }
