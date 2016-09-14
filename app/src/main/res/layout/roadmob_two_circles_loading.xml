@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/roadmob_customview_loading_circle_left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/roadmob_loading_circle" />
+
+    <ImageView
+        android:id="@+id/roadmob_customview_loading_circle_right"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/roadmob_loading_circle" />
+
+</merge>
