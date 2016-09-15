@@ -1,13 +1,8 @@
 package com.dtlim.expandots;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -20,14 +15,13 @@ import java.util.List;
  */
 public class Expandots extends View {
 
-    List<Dot> mDots = new ArrayList<Dot>();
-    private int mDotsCount = 4;
+    List<Dot> mDots = new ArrayList<>();
+    List<ValueAnimator> mValueAnimators = new ArrayList<>();
+    private int mDotsCount = 6;
     private int mMaxScale = 100;
     private int mMinScale = 10;
     private int mDuration = 800;
     private int mWaitingDuration = mDuration/4;
-    private int mWaitForAll = (mWaitingDuration)*(mDotsCount-2);
-
 
     public Expandots(Context context) {
         super(context);
@@ -45,56 +39,47 @@ public class Expandots extends View {
     }
 
     public void initialize() {
-        Log.d("ANIM", "initialize: " + mWaitForAll);
         mDots = new ArrayList<>();
+        mValueAnimators = new ArrayList<>();
 
         for(int i=0; i<mDotsCount; i++) {
             final Dot dot = new Dot(mMaxScale*(i+1), mMaxScale);
             mDots.add(dot);
+
             ValueAnimator animator = ValueAnimator.ofInt(mMinScale, mMaxScale, mMinScale);
             animator.setDuration(mDuration);
-            animator.setStartDelay(i * mWaitingDuration);
+            mValueAnimators.add(animator);
 
+            final int index = i;
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     int scale = (int)(valueAnimator.getAnimatedValue());
+                    if(index==0) {
+                        Log.d("ANIMATION", "onAnimationUpdate: " + valueAnimator.getCurrentPlayTime());
+                    }
+                    if(valueAnimator.getCurrentPlayTime() >= mWaitingDuration) {
+                        doNextAnimation(index);
+                    }
                     dot.currentWidth = scale;
                     dot.currentHeight = scale;
                     invalidate();
                 }
             });
+        }
+        mValueAnimators.get(0).start();
+    }
 
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    Log.d("ANIM", "onAnimationEnd: " + dot.mPosX);
-                    if(mWaitForAll > 0) {
-                        animator.setStartDelay(mWaitForAll);
-                    }
-                    else {
-                        // bug?
-                        animator.setStartDelay(0);
-                    }
-                    animator.start();
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-
+    private void doNextAnimation(int index) {
+        ValueAnimator animator;
+        if(index >= mValueAnimators.size()-1) {
+            animator = mValueAnimators.get(0);
+        }
+        else {
+            animator = mValueAnimators.get(index + 1);
+        }
+        if(!animator.isStarted()) {
+            Log.d("ANIMATION", "doNextAnimation: " + index + 1);
             animator.start();
         }
     }
