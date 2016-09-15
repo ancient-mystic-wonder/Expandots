@@ -1,4 +1,4 @@
-package com.dtlim.expandots;
+package com.dtlim.sample;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;

@@ -17,11 +17,11 @@ public class Expandots extends View {
 
     List<Dot> mDots = new ArrayList<>();
     List<ValueAnimator> mValueAnimators = new ArrayList<>();
-    private int mDotsCount = 6;
+    private int mDotsCount = 2;
     private int mMaxScale = 100;
-    private int mMinScale = 10;
-    private int mDuration = 800;
-    private int mWaitingDuration = mDuration/4;
+    private int mMinScale = 0;
+    private int mDuration = 1400;
+    private int mWaitingDuration = mDuration/2;
 
     public Expandots(Context context) {
         super(context);
