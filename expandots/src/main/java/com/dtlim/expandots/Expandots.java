@@ -4,12 +4,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +19,8 @@ public class Expandots extends View {
     List<ValueAnimator> mValueAnimators = new ArrayList<>();
 
     private int mDotsCount;
-    private float mMaxScale;
-    private float mMinScale;
+    private float mMaxWidth;
+    private float mMinWidth;
     private int mDuration;
     private int mNextStartDelay;
     private int mDotsColor;
@@ -47,20 +43,19 @@ public class Expandots extends View {
     }
 
     public void initialize() {
-        //setLayoutParams(new ViewGroup.LayoutParams(10, 10));
-        //setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
         mDots = new ArrayList<>();
         mValueAnimators = new ArrayList<>();
 
         for(int i=0; i<mDotsCount; i++) {
-            final Dot dot = new Dot((int) (mMaxScale*i + mMaxScale/2),
-                    (int) (mMaxScale - mMaxScale/2),
+            final Dot dot = new Dot((int) (mMaxWidth *i + mMaxWidth /2),
+                    (int) (mMaxWidth - mMaxWidth /2),
                     mDotsColor);
+            dot.setCurrentWidth(mMinWidth);
+            dot.setCurrentHeight(mMinWidth);
 
             mDots.add(dot);
 
-            ValueAnimator animator = ValueAnimator.ofFloat(mMinScale, mMaxScale, mMinScale);
+            ValueAnimator animator = ValueAnimator.ofFloat(mMinWidth, mMaxWidth, mMinWidth);
             animator.setDuration(mDuration);
             mValueAnimators.add(animator);
 
@@ -80,6 +75,14 @@ public class Expandots extends View {
                 }
             });
         }
+
+        if(getLayoutParams() != null) {
+            getLayoutParams().width = (int) (mDotsCount * mMaxWidth);
+            getLayoutParams().height = (int) mMaxWidth;
+            requestLayout();
+            invalidate();
+        }
+
         startAt(0);
     }
 
@@ -90,8 +93,8 @@ public class Expandots extends View {
     private void setAttributes(AttributeSet attrs) {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.Expandots, 0, 0);
         try {
-            mMinScale = a.getDimension(R.styleable.Expandots_minWidth, 0);
-            mMaxScale = a.getDimension(R.styleable.Expandots_maxWidth, 100);
+            mMinWidth = a.getDimension(R.styleable.Expandots_minWidth, 0);
+            mMaxWidth = a.getDimension(R.styleable.Expandots_maxWidth, 100);
             mDuration = a.getInt(R.styleable.Expandots_duration, 1400);
             mNextStartDelay = a.getInt(R.styleable.Expandots_nextStartDelay, mDuration/2);
             mDotsCount = a.getInt(R.styleable.Expandots_count, 2);
@@ -108,8 +111,8 @@ public class Expandots extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        getLayoutParams().width = (int)(mDotsCount*mMaxScale);
-        getLayoutParams().height = (int)mMaxScale;
+        getLayoutParams().width = (int)(mDotsCount* mMaxWidth);
+        getLayoutParams().height = (int) mMaxWidth;
     }
 
     private void doNextAnimation(int index) {
@@ -131,5 +134,62 @@ public class Expandots extends View {
         for(Dot dot : mDots) {
             dot.draw(canvas);
         }
+    }
+
+    public void setCount(int count) {
+        this.mDotsCount = count;
+    }
+
+    public void setMinWidth(float width) {
+        this.mMinWidth = width;
+    }
+
+    public void setMaxWidth(float maxWidth) {
+        this.mMaxWidth = maxWidth;
+    }
+
+    public void setDuration(int duration) {
+        this.mDuration = duration;
+    }
+
+    public void setNextStartDelay(int nextStartDelay) {
+        this.mNextStartDelay = nextStartDelay;
+    }
+
+    public void setDotsColor(int dotsColor) {
+        this.mDotsColor = dotsColor;
+    }
+
+    public int getCount() {
+        return mDotsCount;
+    }
+
+    public float getMaxWidth() {
+        return mMaxWidth;
+    }
+
+    public float getMinWidth() {
+        return mMinWidth;
+    }
+
+    public int getDuration() {
+        return mDuration;
+    }
+
+    public int getNextStartDelay() {
+        return mNextStartDelay;
+    }
+
+    public int getDotsColor() {
+        return mDotsColor;
+    }
+
+    public void restart() {
+        for(ValueAnimator animator : mValueAnimators) {
+            animator.removeAllUpdateListeners();
+            animator.cancel();
+            animator.end();
+        }
+        initialize();
     }
 }
