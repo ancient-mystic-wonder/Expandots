@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="Expandots">
+        <attr name="minWidth" format="dimension" />
+        <attr name="minHeight" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+        <attr name="spacing" format="dimension" />
+        <attr name="duration" format="integer" />
+        <attr name="nextStartDelay" format="integer" />
+        <attr name="count" format="integer" />
+        <attr name="color" format="color" />
+    </declare-styleable>
+    
+</resources>

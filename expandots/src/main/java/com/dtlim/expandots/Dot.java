@@ -11,24 +11,33 @@ public class Dot {
 
     public int mPosX;
     public int mPosY;
-    public int mMaxWidth = 10;
-    public int mMaxHeight = 10;
-    public int mMinWidth = 5;
-    public int mMinHeight = 5;
 
-    public int currentWidth = mMinWidth;
-    public int currentHeight = mMinHeight;
+    public float mCurrentWidth;
+    public float mCurrentHeight;
 
     public Paint mPaint = new Paint();
 
     public Dot(int x, int y) {
         mPosX = x;
         mPosY = y;
-
         mPaint.setColor(Color.RED);
     }
 
+    public Dot(int x, int y, int color) {
+        mPosX = x;
+        mPosY = y;
+        mPaint.setColor(color);
+    }
+
+    public void setCurrentWidth(float currentWidth) {
+        mCurrentWidth = currentWidth;
+    }
+
+    public void setCurrentHeight(float currentHeight) {
+        mCurrentHeight = currentHeight;
+    }
+
     public void draw(Canvas canvas) {
-        canvas.drawCircle(mPosX, mPosY, currentWidth/2, mPaint);
+        canvas.drawCircle(mPosX, mPosY, mCurrentWidth /2, mPaint);
     }
 }
