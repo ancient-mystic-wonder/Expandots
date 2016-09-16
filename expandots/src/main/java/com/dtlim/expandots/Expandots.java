@@ -47,47 +47,51 @@ public class Expandots extends View {
         mValueAnimators = new ArrayList<>();
 
         for(int i=0; i<mDotsCount; i++) {
-            final Dot dot = new Dot((int) (mMaxWidth *i + mMaxWidth /2),
-                    (int) (mMaxWidth - mMaxWidth /2),
-                    mDotsColor);
-            dot.setCurrentWidth(mMinWidth);
-            dot.setCurrentHeight(mMinWidth);
-
-            mDots.add(dot);
-
-            ValueAnimator animator = ValueAnimator.ofFloat(mMinWidth, mMaxWidth, mMinWidth);
-            animator.setDuration(mDuration);
-            mValueAnimators.add(animator);
-
-            final int index = i;
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    float scale = (float)(valueAnimator.getAnimatedValue());
-
-                    if(valueAnimator.getCurrentPlayTime() >= mNextStartDelay) {
-                        doNextAnimation(index);
-                    }
-
-                    dot.setCurrentWidth(scale);
-                    dot.setCurrentHeight(scale);
-                    invalidate();
-                }
-            });
+            addNewDot(i);
+            addNewValueAnimator(i);
         }
+        setViewParams();
+        startAt(0);
+    }
 
+    private void addNewDot(int index) {
+        final Dot dot = new Dot((int) (mMaxWidth*index + mMaxWidth /2),
+                (int) (mMaxWidth - mMaxWidth /2),
+                mDotsColor);
+        dot.setCurrentWidth(mMinWidth);
+        dot.setCurrentHeight(mMinWidth);
+        mDots.add(dot);
+    }
+
+    private void addNewValueAnimator(final int index) {
+        ValueAnimator animator = ValueAnimator.ofFloat(mMinWidth, mMaxWidth, mMinWidth);
+        animator.setDuration(mDuration);
+        mValueAnimators.add(animator);
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float scale = (float)(valueAnimator.getAnimatedValue());
+
+                if(valueAnimator.getCurrentPlayTime() >= mNextStartDelay) {
+                    doNextAnimation(index);
+                }
+
+                Dot dot = mDots.get(index);
+                dot.setCurrentWidth(scale);
+                dot.setCurrentHeight(scale);
+                invalidate();
+            }
+        });
+    }
+
+    private void setViewParams() {
         if(getLayoutParams() != null) {
             getLayoutParams().width = (int) (mDotsCount * mMaxWidth);
             getLayoutParams().height = (int) mMaxWidth;
             requestLayout();
             invalidate();
         }
-
-        startAt(0);
-    }
-
-    public void startAt(int index) {
-        mValueAnimators.get(index).start();
     }
 
     private void setAttributes(AttributeSet attrs) {
@@ -111,8 +115,7 @@ public class Expandots extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        getLayoutParams().width = (int)(mDotsCount* mMaxWidth);
-        getLayoutParams().height = (int) mMaxWidth;
+        setViewParams();
     }
 
     private void doNextAnimation(int index) {
@@ -182,6 +185,10 @@ public class Expandots extends View {
 
     public int getDotsColor() {
         return mDotsColor;
+    }
+
+    public void startAt(int index) {
+        mValueAnimators.get(index).start();
     }
 
     public void restart() {
