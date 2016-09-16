@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,13 @@ public class Expandots extends View {
 
     List<Dot> mDots = new ArrayList<>();
     List<ValueAnimator> mValueAnimators = new ArrayList<>();
-    private int mDotsCount = 2;
-    private float mMaxScale = 100;
-    private float mMinScale = 0;
-    private int mDuration = 1400;
-    private int mNextStartDelay = mDuration/2;
-    private int mDotsColor = 0;
+
+    private int mDotsCount;
+    private float mMaxScale;
+    private float mMinScale;
+    private int mDuration;
+    private int mNextStartDelay;
+    private int mDotsColor;
 
     public Expandots(Context context) {
         super(context);
@@ -44,11 +47,16 @@ public class Expandots extends View {
     }
 
     public void initialize() {
+        //setLayoutParams(new ViewGroup.LayoutParams(10, 10));
+        //setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         mDots = new ArrayList<>();
         mValueAnimators = new ArrayList<>();
 
         for(int i=0; i<mDotsCount; i++) {
-            final Dot dot = new Dot((int) mMaxScale*(i+1), (int) mMaxScale, mDotsColor);
+            final Dot dot = new Dot((int) (mMaxScale*i + mMaxScale/2),
+                    (int) (mMaxScale - mMaxScale/2),
+                    mDotsColor);
 
             mDots.add(dot);
 
@@ -95,6 +103,13 @@ public class Expandots extends View {
         finally {
             a.recycle();
         }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getLayoutParams().width = (int)(mDotsCount*mMaxScale);
+        getLayoutParams().height = (int)mMaxScale;
     }
 
     private void doNextAnimation(int index) {
