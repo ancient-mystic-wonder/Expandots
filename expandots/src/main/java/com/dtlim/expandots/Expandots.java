@@ -55,7 +55,7 @@ public class Expandots extends View {
     }
 
     private void addNewDot(int index) {
-        final Dot dot = new Dot((int) (mMaxWidth*index + mMaxWidth /2),
+        Dot dot = new Dot((int) (mMaxWidth*index + mMaxWidth /2),
                 (int) (mMaxWidth - mMaxWidth /2),
                 mDotsColor);
         dot.setCurrentWidth(mMinWidth);
