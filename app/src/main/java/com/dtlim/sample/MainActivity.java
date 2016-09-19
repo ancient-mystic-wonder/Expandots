@@ -123,8 +123,10 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 mExpandots.setDuration(i);
                 mExpandots.setNextStartDelay(i/2);
+                if(mSeekbarNextStartDelay.getProgress() > i) {
+                    mSeekbarNextStartDelay.setProgress(i);
+                }
                 mSeekbarNextStartDelay.setMax(i);
-                mSeekbarNextStartDelay.setProgress(i/2);
                 mTextViewDuration.setText("" + i + " ms");
                 mExpandots.restart();
             }
