@@ -11,6 +11,7 @@
         <attr name="nextStartDelay" format="integer" />
         <attr name="count" format="integer" />
         <attr name="color" format="color" />
+        <attr name="waitUntilFinish" format="boolean" />
     </declare-styleable>
     
 </resources>

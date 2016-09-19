@@ -21,6 +21,7 @@
         app:maxWidth="50dp"
         app:duration="2000"
         app:nextStartDelay="1000"
+        app:waitUntilFinish="true"
         app:color="@color/colorAccent"/>
 
     <ScrollView

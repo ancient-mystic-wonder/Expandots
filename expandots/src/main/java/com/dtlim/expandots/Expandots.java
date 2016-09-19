@@ -24,6 +24,7 @@ public class Expandots extends View {
     private int mDuration;
     private int mNextStartDelay;
     private int mDotsColor;
+    private boolean mWaitUntilFinish;
 
     public Expandots(Context context) {
         super(context);
@@ -73,8 +74,21 @@ public class Expandots extends View {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float scale = (float)(valueAnimator.getAnimatedValue());
 
-                if(valueAnimator.getCurrentPlayTime() >= mNextStartDelay) {
-                    doNextAnimation(index);
+                if(!mWaitUntilFinish) {
+                    if(valueAnimator.getCurrentPlayTime() >= mNextStartDelay) {
+                        doNextAnimation(index);
+                    }
+                }
+
+                else {
+                    if(index < mValueAnimators.size()-1 &&
+                            valueAnimator.getCurrentPlayTime() >= mNextStartDelay) {
+                        doNextAnimation(index);
+                    }
+                    else if(index >= mValueAnimators.size()-1 &&
+                            valueAnimator.getCurrentPlayTime() >= valueAnimator.getDuration()) {
+                        doNextAnimation(index);
+                    }
                 }
 
                 Dot dot = mDots.get(index);
@@ -103,6 +117,7 @@ public class Expandots extends View {
             mNextStartDelay = a.getInt(R.styleable.Expandots_nextStartDelay, mDuration/2);
             mDotsCount = a.getInt(R.styleable.Expandots_count, 2);
             mDotsColor = a.getColor(R.styleable.Expandots_color, 0xFFFF0000);
+            mWaitUntilFinish = a.getBoolean(R.styleable.Expandots_waitUntilFinish, false);
         }
         catch (Exception e) {
             e.printStackTrace();
