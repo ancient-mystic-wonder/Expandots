@@ -1,5 +1,6 @@
 package com.dtlim.expandots;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -97,6 +98,31 @@ public class Expandots extends View {
                 invalidate();
             }
         });
+
+        // special case for when dots count == 1
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(mDotsCount <= 1) {
+                    animation.start();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
     private void setViewParams() {
@@ -141,6 +167,7 @@ public class Expandots extends View {
         else {
             animator = mValueAnimators.get(index + 1);
         }
+
         if(!animator.isStarted()) {
             animator.start();
         }
