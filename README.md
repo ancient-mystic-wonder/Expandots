@@ -1,7 +1,7 @@
 # Expandots
 A customizable cascading dots progress indicator.  Originally designed to port the progress indicator at http://roadmob.ph (shameless plug) for Android, now extended to be more flexible.
 
-*gif here*
+![Demo GIF](https://github.com/ancient-mystic-wonder/Expandots/blob/master/demo.gif "Sample app sample GIF")
 
 ## Installation
 Add the following to your app level ```build.gradle``` file:
@@ -34,7 +34,7 @@ For a sample usage with sliders, see the ```app/``` folder.
         app:color="@color/colorAccent" />
 ```
 
-### Java
+#### Java
 ```
 Expandots expandots = (Expandots) findViewById(R.id.expandots);
 expandots.setCount(3);
@@ -44,6 +44,15 @@ expandots.setDuration(1000);
 expandots.setNextStartDelay(500);
 expandots.setWaitUntilFinish(true);
 ```
+
+## Documentation
+
+#### Duration and delay
+The ```duration``` attribute controls how long each dot is going to go through the whole expand-contract animation.
+The ```nextStartDelay``` attribute determines the number of milliseconds to wait after dot #n has started animating before dot #n+1 begins its animation.
+
+#### Wait until finish
+The ```waitUntilFinish``` attribute determines if the view will wait for the last dot to finish animating before looping back to the first dot.
 
 ## License
 Library falls under Apache 2.0
