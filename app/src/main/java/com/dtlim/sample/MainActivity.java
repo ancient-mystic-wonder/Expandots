@@ -2,6 +2,8 @@ package com.dtlim.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mTextViewDuration;
     TextView mTextViewNextStartDelay;
 
+    CheckBox mCheckBoxWaitUntilFinish;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         mTextViewDuration = (TextView) findViewById(R.id.textview_duration);
         mTextViewNextStartDelay = (TextView) findViewById(R.id.textview_next_start_delay);
 
+        mCheckBoxWaitUntilFinish = (CheckBox) findViewById(R.id.checkbox_wait_until_finish);
+
         initializeListeners();
         initializeValues();
     }
@@ -51,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mSeekbarMaxWidth.setProgress((int) mExpandots.getMaxWidth());
         mSeekbarDuration.setProgress(mExpandots.getDuration());
         mSeekbarNextStartDelay.setProgress(mExpandots.getNextStartDelay());
+        mCheckBoxWaitUntilFinish.setChecked(mExpandots.getWaitUntilFinish());
     }
 
     private void initializeListeners() {
@@ -149,6 +156,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        mCheckBoxWaitUntilFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCheckBoxWaitUntilFinish.isChecked()) {
+                    mExpandots.setWaitUntilFinish(true);
+                }
+                else {
+                    mExpandots.setWaitUntilFinish(false);
+                }
+                mExpandots.restart();
             }
         });
 

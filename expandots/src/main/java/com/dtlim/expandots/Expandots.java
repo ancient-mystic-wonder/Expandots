@@ -178,6 +178,10 @@ public class Expandots extends View {
         this.mDotsColor = dotsColor;
     }
 
+    public void setWaitUntilFinish(boolean waitUntilFinish) {
+        this.mWaitUntilFinish = waitUntilFinish;
+    }
+
     public int getCount() {
         return mDotsCount;
     }
@@ -200,6 +204,10 @@ public class Expandots extends View {
 
     public int getDotsColor() {
         return mDotsColor;
+    }
+
+    public boolean getWaitUntilFinish() {
+        return mWaitUntilFinish;
     }
 
     public void startAt(int index) {
